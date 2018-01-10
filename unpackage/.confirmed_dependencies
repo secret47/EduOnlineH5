@@ -1,0 +1,60 @@
+{
+  "main.html": {
+    "refer": [
+      "setting.html",
+      "lessons.html"
+    ]
+  },
+  "login.html": {
+    "refer": [
+      "main.html",
+      "login.html"
+    ]
+  },
+  "lessons.html": {
+    "refer": [
+      "lessonDetail.html"
+    ]
+  },
+  "lessonDetail.html": {
+    "refer": [
+      "lessons.html",
+      "subjectDetail.html"
+    ]
+  },
+  "subjectDetail.html": {
+    "refer": [
+      "lessonDetail.html"
+    ]
+  },
+  "page/login.html": {
+    "refer": [
+      "page/main.html"
+    ]
+  },
+  "page/main.html": {
+    "refer": [
+      "page/lessons.html",
+      "page/login.html"
+    ],
+    "resources": [
+      "page/login.html"
+    ]
+  },
+  "page/lessonDetail.html": {
+    "refer": [
+      "page/subjectDetail.html",
+      "page/lessons.html"
+    ]
+  },
+  "page/lessons.html": {
+    "refer": [
+      "page/lessonDetail.html"
+    ]
+  },
+  "page/subjectDetail.html": {
+    "refer": [
+      "page/lessonDetail.html"
+    ]
+  }
+}

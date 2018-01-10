@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<style type="text/css">
+			.header {
+				width: 100%
+			}
+			
+			.header img {
+				width: 100%;
+			}
+			
+			ul,
+			li {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			
+			.allSubjectsList {
+				margin-top: 30px;
+			}
+			
+			.bigTitle {
+				height: 50px;
+				line-height: 50px;
+				background: #fff;
+			}
+			
+			.bigTitle span {
+				display: inline;
+				padding: 5px;
+				background: #1E88E5;
+				color: #fff;
+				border-radius: 5px;
+				margin-left: 20px;
+				box-shadow: 0px 0px 10px #ddd;
+			}
+			
+			.smallTitle {
+				width: 95%;
+				height: 60px;
+				margin: 20px auto;
+			}
+			
+			.smallTitle .opper {
+				width: 15%;
+				float: left;
+			}
+			
+			.smallTitle .lessonName {
+				width: 83%;
+				height: 4rem;
+				background-image: url(https://api.jules.xin/images/lists.png);
+				background-size: 100% 100%;
+				float: left;
+				border-radius: 5px;
+				box-shadow: 0px 0px 10px #ddd;
+				font-size: 15px;
+				text-indent: 10px;
+				padding: 0;
+				margin: 0 0 0 5px;
+				text-align: left;
+				border: 0;
+			}
+			
+			.smallTitle .lessonName span {
+				display: block;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				/*white-space: nowrap;*/
+				word-break: break-word;
+			}
+			
+			.name {
+				width: 65%;
+				height: 22px;
+				line-height: 22px;
+				background: #1E88e5;
+				color: #fff;
+				margin: 5px 10px 0;
+				border-radius: 5px;
+				font-size: 13px;
+			}
+			
+			.desc {
+				width: 90%;
+				height: 25px;
+				line-height: 25px;
+				font-size: 12px;
+				color: dimgray;
+			}
+			
+			.opper {
+				width: 100%;
+				height: 2.3rem;
+				background-image: url('https://api.jules.xin/images/attr.png');
+				background-size: 100% 100%;
+				overflow: hidden;
+				text-indent: -99999em;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				box-shadow: 0px 0px 10px #ddd;
+				border: 0;
+			}
+			
+			.studentList {
+				width: 80%;
+				height: 80%;
+				margin: 0 auto;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				background-color: #fff;
+				z-index: 101;
+				border-radius: 5px;
+			}
+			
+			.headTitle {
+				height: 40px;
+				text-align: center;
+				line-height: 40px;
+				color: #1E88E5;
+			}
+			
+			.close {
+				height: 40px;
+			}
+			
+			.close button {
+				width: 70px;
+				margin-top: 3px;
+			}
+			
+			.mui-table-view {
+				height: calc(100% - (40px * 2));
+				overflow: auto;
+			}
+			
+			.snames {
+				width: 80%;
+				height: 40px;
+				display: inline-block;
+				line-height: 40px;
+				font-size: 14px;
+			}
+			
+			.Attrs {
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				background: #1E88E5;
+				color: #fff;
+				border: 0;
+			}
+			
+			.notAttr {
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				background: #4F4F4F;
+				color: #fff;
+				border: 0;
+				float: right;
+			}
+			
+			.closed {
+				display: inline-block;
+				width: 40px;
+				height: 40px;
+				position: absolute;
+				z-index: 111111;
+				right: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" @click="returnBack"></a>
+				<h1 class="mui-title">School of Fish</h1>
+			</header>
+			<div class="mui-content">
+				<div class="header">
+					<img :src="headerUrl" />
+				</div>
+				<ul class="allSubjectsList">
+					<li v-for="item in detailList">
+						<div class="bigTitle">
+							<span>{{item.name}}</span>
+						</div>
+						<ul>
+							<li v-for="(lesson,index) in item.lessons" class="smallTitle">
+								<button class="opper" @click="openStudents(lesson.lesson)">
+									出勤
+								</button>
+								<button class="lessonName" @click="openLessons(lesson.lesson,lesson.name,lesson.description)" :disabled="lesson.completed">
+									<span class="name">{{lesson.term_name}}：{{lesson.name}}</span>
+									<span class="desc" v-for="(des,index) in lesson.description" v-if="index == 0">{{des.title}}</span>
+								</button>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+
+			<div id="popover" class="mui-backdrop" style="display: none;" @click="close">
+				<div class="studentList">
+					<div class="headTitle">
+						出勤名单
+						<a @click="close" class="closed">X</a>
+					</div>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell" v-for="child in childrenList">
+							<span class="snames">{{child.username}}</span>
+							<button :class="child.css" @click="changeAttr(child.id)">{{child.attrCon}}</button>
+						</li>
+					</ul>
+					<div class="close mui-text-center">
+						<button class="btn mui-btn-primary" @click="closePop">Confirm</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/app.js"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				headerUrl: "",
+				detailList: [],
+				childrenList: [],
+				attrs: {
+					atttrue: false,
+					attfalse: true,
+				},
+				selectedLessonName: "",
+				selectedSessionId: 0,
+				term_index: "",
+			},
+			methods: {
+				returnBack: function() {
+					console.log("课程列表")
+					mui.openWindow({
+						url: 'lessons.html'
+					});
+					mui.back();
+				},
+				close: function() {
+					$("#popover").hide();
+				},
+				openLessons: function(lesson, name, description) {
+					var description = description[0].title;
+					var name = name;
+					var index = vm.term_index;
+					var thisUrl = "subjectDetail.html?lesson=" + lesson + '&name=' + name + '&des=' + description + '&index=' + index;
+					thisUrl = encodeURI(encodeURI(thisUrl));
+					window.location.href = thisUrl
+				},
+				openStudents: function(lesson_name) {
+					$("#popover").show();
+					vm.setStudent(lesson_name);
+				},
+				setStudent: function(lesson_name) {
+					//得到当前课程的sessionid
+					var sessionid = vm.getSessionId(lesson_name);
+					if(sessionid == 0) {
+						console.log("请先上课")
+					}
+					vm.selectedLessonName = lesson_name;
+					vm.selectedSessionId = sessionid;
+					//得到当前班级Id
+					var class_id = localStorage.class_id;
+					$.ajax({
+						type: "get",
+						url: api + "/SOFGetClassStudentsWithSession.php",
+						data: {
+							lesson_name: lesson_name,
+							class_id: class_id,
+							session_id: sessionid
+						},
+						success: function(res) {
+							var arr = res.split(/\t/);
+							var result = arr[0];
+							result = result.toUpperCase();
+							if(result == 'OK') {
+								var children = Base.decode(arr[1]);
+								children = JSON.parse(children);
+
+								//设置switch状态
+								for(var i = 0; i < children.length; i++) {
+									var status = children[i].status;
+									if(status == 0) {
+										children[i].checked = false;
+										children[i].attrCon = '缺勤';
+										children[i].css = "notAttr"
+									} else {
+										children[i].checked = true;
+										children[i].attrCon = '出勤';
+										children[i].css = "Attrs"
+									}
+								}
+								vm.childrenList = children;
+							}
+						},
+						error: function(err) {
+							console.log(err)
+						}
+					})
+
+				},
+
+				//得到当前课程的session_id
+				getSessionId: function(lesson_name) {
+					var lesson_name = lesson_name;
+					var finished_lesson = localStorage.finished_lesson_list;
+					finished_lesson = JSON.parse(finished_lesson);
+					if(finished_lesson != null) {
+						for(var i = 0; i < finished_lesson.count; i++) {
+							if(finished_lesson[i].content_name == lesson_name) {
+								if(finished_lesson[i].session_id == null)
+									return 0;
+								else
+									return parseInt(finished_lesson[i].session_id);
+							}
+						}
+					}
+					//没有数据返回当前session_id
+					var sid = localStorage.session_data_id
+					if(sid != null && sid > 0) {
+						return sid;
+					}
+					return 0;
+				},
+				//检查课程是否完成
+				checkIfLessonFinished: function(lesson_name) {
+					//根据课程名称查询课程是否在已结束课程列表里
+					var that = this;
+					var finished_lesson = localStorage.finished_lesson_list;
+					finished_lesson = JSON.parse(finished_lesson);
+					if(finished_lesson == null) {
+						return false
+					}
+					for(var i = 0; i < finished_lesson.count; i++) {
+						if(finished_lesson[i].content_name == lesson_name) {
+							return true;
+						}
+					}
+					return false;
+				},
+				changeAttr: function(id) {
+					var selectedLessonName = vm.selectedLessonName;
+					var childList = vm.childrenList;
+					var child_id = id;
+					for(var i = 0; i < childList.length; i++) {
+						var id = childList[i].id;
+						if(child_id == id) {
+							var checked = childList[i].checked; //得到当前学生的出勤状态 true 出勤，false，缺勤
+							if(checked == true) {
+								//当点中已出勤的学生的id时，这个学生就该改为缺勤模式
+								childList[i].checked = false;
+								childList[i].attrCon = '缺勤'
+								childList[i].css = "notAttr"
+							} else {
+								childList[i].checked = true;
+								childList[i].attrCon = '出勤';
+								childList[i].css = "Attrs"
+							}
+						}
+
+					}
+					vm.childrenList = childList;
+				},
+				closePop: function() {
+					var childrenList = vm.childrenList;
+					var child = '';
+					var selectedChildList = [];
+					for(var i = 0; i < childrenList.length; i++) {
+						var id = childrenList[i].id;
+						if(childrenList[i].checked) {
+							child = '"child' + id + '":' + '{"id":' + id + '}';
+							selectedChildList.push(child);
+						}
+					}
+					var childStr = selectedChildList.toString();
+					childStr = '{' + childStr + '}';
+
+					var base64Child = Base.encode(childStr);
+					$.ajax({
+						type: "POST",
+						url: api + "/SOFSubmitAttendanceNew.php",
+						data: {
+							session_id: vm.selectedSessionId,
+							childlist: base64Child
+						},
+						success: function(res) {
+							console.log(res)
+							//							var data = res.spilt(/\t/);
+							//							var result = data[0];
+							//							result = result.toUpperCase();
+							//							if(result == 'OK'){
+							$("#popover").hide();
+							//							}
+						},
+						error: function(err) {
+							console.log(err)
+						}
+					})
+				}
+			}
+		});
+		(function($, doc) {
+			$.init();
+			// 获取url中的参数
+			function getUrlParam(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r != null) {
+					return unescape(r[2]);
+				} else {
+					return null;
+				}
+			}
+			//当前选中的id
+			var index = getUrlParam('id');
+			indx = parseInt(index);
+			localStorage.setItem('selected_term_index',index);//得到选中的id
+			vm.term_index = index;
+			var terms = localStorage.terms_list;
+			terms = JSON.parse(terms);
+			//得到当前的term内容
+			var thisTerm = terms[index];
+			//设置顶部图片
+			vm.headerUrl = thisTerm.imgUrl;
+			vm.detailList = thisTerm.topics;
+		}(mui, document))
+	</script>
+
+</html>

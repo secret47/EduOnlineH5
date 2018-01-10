@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<style>
+			ul {
+				font-size: 14px;
+				color: #8f8f94;
+			}
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			
+			.studentList {
+				width: 80%;
+				height: 80%;
+				margin: 0 auto;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				background-color: #fff;
+				z-index: 101;
+				border-radius: 5px;
+			}
+			
+			.headTitle {
+				height: 40px;
+				text-align: center;
+				line-height: 40px;
+				color: #1E88E5;
+			}
+			
+			.close {
+				height: 40px;
+			}
+			
+			.close button {
+				width: 80px;
+				margin-top: 5px;
+				padding: 0;
+				text-align: center;
+				height: 30px;
+			}
+			
+			.mui-table-view {
+				height: calc(100% - (40px * 2));
+				overflow: auto;
+			}
+			
+			.snames {
+				/*width: 75%;*/
+				height: 40px;
+				display: inline-block;
+				line-height: 40px;
+				color: #000;
+			}
+			
+			.atttrue {
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				background: #1E88E5;
+				color: #fff;
+				border: 0;
+			}
+			
+			.attfalse {
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				background: #4F4F4F;
+				color: #fff;
+				border: 0;
+			}
+			
+			.resetPsw {
+				/*width: 55px;*/
+				height: 40px;
+				padding: 0;
+				background: #EC971F;
+				color: #fff;
+				border: 0;
+				font-size: 12px;
+				float: right;
+				padding: 0 5px;
+			}
+			
+			.binding {
+				position: relative;
+				top: -30px;
+			}
+			
+			.cont_t {
+				display: inline-block;
+				padding: 10px 20px;
+				background: #1E88E5;
+				height: 40px;
+				color: #fff;
+				border-radius: 5px;
+			}
+			
+			.title-cont li {
+				margin: 7px 0;
+				font-size: 14px;
+			}
+			
+			.title-img {
+				width: 80%;
+				margin: 10px auto;
+			}
+			
+			.title-img img {
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<h1 class="mui-title">School of Fish</h1>
+			</header>
+			<nav class="mui-bar mui-bar-tab">
+				<a class="mui-tab-item mui-active" href="#tabbar">
+					<span class="mui-icon mui-icon-home"></span>
+					<span class="mui-tab-label">Home</span>
+				</a>
+				<a class="mui-tab-item training" @click="inform">
+					<span class="mui-icon mui-icon-compose"></span>
+					<span class="mui-tab-label">Training</span>
+				</a>
+				<a class="mui-tab-item" href="#tabbar-with-lesson">
+					<span class="mui-icon  mui-icon-extra  mui-icon-extra-xiaoshuo"></span>
+					<span class="mui-tab-label">Curriculum</span>
+				</a>
+				<a class="mui-tab-item" href="#tabbar-with-mine">
+					<span class="mui-icon mui-icon-contact"></span>
+					<span class="mui-tab-label">Mine</span>
+				</a>
+			</nav>
+			<div class="mui-content">
+				<div id="tabbar" class="mui-control-content mui-active">
+					<div class="mui-slider">
+						<div class="mui-slider-group">
+							<div class="mui-slider-item" v-for="item in slidePic">
+								<!-- 具体内容 -->
+								<img :src="item.url" alt="" />
+							</div>
+						</div>
+					</div>
+					<div class="video_class">
+						<span></span>
+						<video :src="videoUrl" controls="controls">
+						</video>
+					</div>
+					<div class="home-content">
+						<div class="title-img">
+							<img src="../images/homeTitle.png" />
+						</div>
+						<div class="title-cont  mui-text-center">
+							<span class="cont_t">
+								JULES CURRICULUM
+							</span>
+							<li>COMPUTATIONAL THINKING</li>
+							<li>DIGITAL LITERACY</li>
+							<li>FINANCIAL LITERACY</li>
+						</div>
+						<div class="four_line">
+
+						</div>
+					</div>
+				</div>
+				<div id="tabbar-with-test" class="mui-control-content">
+					<div class="test-header">
+						<img src="../images/chs/title.png" />
+					</div>
+					<div class="teaching_Video">
+						<div class="videos_class">
+							<video :src="teaching_url" controls="controls">
+							</video>
+						</div>
+						<div class="change">
+							<button v-for="item in videos" class="btnVideo">{{item.title}}{{item.id+1}}</button>
+						</div>
+
+					</div>
+				</div>
+				<div id="tabbar-with-lesson" class="mui-control-content">
+					<div class="lesson_header">
+						<img src="https://api.jules.xin/images/3IVxg.png" />
+					</div>
+					<div class="lesson_contain">
+						<div class="lesson_top">
+							<div class="lesson">
+								<button class="lesson_img lessons" id="lessons"></button>
+								<span class="lesson_title">{{termFinishedLessonCount}} / {{termLessonCount}} Lesson Finished</span>
+							</div>
+							<div class="demo_lesson">
+								<!--<button class="lesson_img demos"></button>
+								<span></span>-->
+								<button class="lesson_img students" @click="openStudents"></button>
+								<span class="lesson_title">Change Password</span>
+							</div>
+						</div>
+						<div class="lesson_bot">
+							<div class="student">
+								<!--<button class="lesson_img students" @click="openStudents"></button>
+								<span class="lesson_title">Change Password</span>-->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="tabbar-with-mine" class="mui-control-content">
+					<div class="userInfo">
+						<div class='header-bg'>
+							<!--头部背景图-->
+							<div class='header-top'></div>
+							<div class='header-body'></div>
+						</div>
+						<div class='aboutMe'>
+							<image src="../images/avatar.jpg" class='avatar' width="100" height="100"></image>
+							<div class='binding'>User:{{teacherInfo.username}}</div>
+							</view>
+						</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								School<span class="mui-pull-right">{{teacherInfo.school_name}}</span>
+							</li>
+							<li class="mui-table-view-cell">
+								<a readonly>Class<span class="mui-pull-right">{{teacherInfo.class_name}}</span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a readonly>Binding<span class="mui-pull-right">{{teacherInfo.username}}</span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>Language<span class="mui-pull-right">English</span></a>
+							</li>
+						</ul>
+						<div class="logout">
+							<button class="mui-btn mui-btn-primary" @click="logout">Log out</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="popover" class="mui-backdrop" style="display: none;">
+				<div class="studentList">
+					<div class="headTitle">
+						Children List
+
+					</div>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell" v-for="child in childrenList">
+							<span class="snames">{{child.name}}</span>
+							<button class="resetPsw" @click="resetPsw(child.name)">Reset Password</button>
+						</li>
+					</ul>
+					<div class="close mui-text-center">
+						<button class="btn mui-btn-primary" @click="closePop">Confirm</button>
+					</div>
+				</div>
+			</div>
+			<script>
+				var vm = new Vue({
+					el: '#app',
+					data: {
+						autoplay: "false",
+						title: "首页",
+						teacherInfo: {},
+						slidePic: [{
+								"url": 'https://api.jules.xin/images/lRvoF.jpg'
+							},
+							{
+								"url": 'https://api.jules.xin/images/lRLLV.jpg'
+							}
+						],
+						videoUrl: 'http://api.jules.xin/asset/Marketing/CT_explain_cn.mp4',
+						teaching_url: 'https://api.jules.xin/asset/Training/cn/training_cn_part_1.mp4',
+						videos: [
+
+							{
+								'id': 0,
+								'title': '视频',
+								'checked': true,
+								'url': 'https://api.jules.xin/asset/Training/cn/training_cn_part_1.mp4',
+								'disabled': false,
+							}, {
+								'id': 1,
+								'title': '视频',
+								'checked': false,
+								'url': 'https://api.jules.xin/asset/Training/cn/training_cn_part_2.mp4',
+								'disabled': false,
+							}, {
+								'id': 2,
+								'title': '视频',
+								'checked': false,
+								'url': 'https://api.jules.xin/asset/Training/cn/training_cn_part_3.mp4',
+								'disabled': false,
+							}, {
+								'id': 3,
+								'title': '视频',
+								'checked': false,
+								'url': 'https://api.jules.xin/asset/Training/cn/training_cn_part_4.mp4',
+								'disabled': false,
+							},
+						],
+						videoCount: 4,
+						childrenList: [],
+						attrs: {
+							atttrue: false,
+							attfalse: true,
+						},
+						termFinishedLessonCount: 0,
+						termLessonCount: 0
+					},
+					//					created:function(){
+					//						this.getTermContent()
+					//					},
+					methods: {
+						openStudents: function() {
+							$("#popover").show();
+							vm.setChildren();
+						},
+						closePop: function() {
+							$("#popover").hide();
+						},
+						logout: function() {
+							localStorage.clear();
+							mui.openWindow({
+								url: "login.html"
+							})
+						},
+						inform: function() {
+							mui.alert("培训暂未开启", "提示", "确定", function(data) {
+								console.log(data)
+							}, "div")
+						},
+						setChildren: function() {
+							var childrenList = localStorage.childsData;
+							childrenList = JSON.parse(childrenList);
+							for(var i = 0; i < childrenList.length; i++) {
+								var data = childrenList[i]
+								data.attr = '缺勤';
+								data.checked = false;
+							}
+							this.childrenList = childrenList;
+						},
+						//重置密码  根据学生的用户名
+						resetPsw: function(name) {
+							var str = "您确定要重置此学生的密码吗？";
+							var btnArray = ["取消", "确定"]
+
+							mui.confirm(str, '重置密码', btnArray, function(e) {
+								if(e.index == 1) {
+									vm.resetPswFun(name);
+
+								}
+								if(e.index == 0) {
+
+								}
+							})
+						},
+						resetPswFun: function(name) {
+							//设置密码     中国版的密码为12345    以下内容为12345的MD5加密版
+							var psw = '827ccb0eea8a706c4c34a16891f84e7b';
+							$.ajax({
+								type: "POST",
+								url: api + "/SOFUpdateUsernameAccess.php",
+								data: {
+									username: name,
+									password: psw,
+								},
+								success: function(res) {
+									console.log(res)
+									var data = res.split(/\t/);
+									var result = data[0];
+									result = result.toUpperCase();
+									if(result == 'OK') {
+										alert('重置成功')
+									}
+
+								},
+								error: function(err) {
+									console.log(err)
+								}
+							});
+						},
+						getFinishedLessonList: function() {
+							var class_id = localStorage.class_id;
+							var content_name = localStorage.content_name;
+							if(content_name == null || content_name == "" || class_id == null || class_id <= 0) {
+								return;
+							}
+							$.ajax({
+								type: "get",
+								url: api + '/SOFGetClassStatusFinished.php?name=' + content_name + '&class_id=' + class_id,
+								data: {
+									name: content_name,
+									class_id: class_id
+								},
+								success: function(res) {
+									res = res.split(/\t/);
+									var result = res[0];
+									result = result.toUpperCase();
+									if(result == 'OK') {
+										var data = res[1];
+										var curLess;
+										vm.getTermContent();
+										if(data == "") {
+											localStorage.setItem('finished_lesson_list', null);
+											localStorage.setItem('lastName', 0);
+											localStorage.setItem('terms_list', null);
+											localStorage.setItem('SELECTED_TERM_INDEX', 0);
+											curLess = 0;
+										} else {
+											//得到已上完的课程
+											var finshedData = Base.decode(data);
+											localStorage.setItem('finished_lesson_list', finshedData)
+										}
+
+									}
+								},
+								error: function(err) {
+
+								}
+							});
+						},
+						getTermContent: function() {
+							var content_name = localStorage.content_name;
+							$.ajax({
+								type: "GET",
+								url: api + '/SOFGetTermDataByName.php?name=' + content_name,
+								data: {
+									content_name: content_name
+								},
+								success: function(res) {
+									var res = res.split(/\t/);
+									var result = res[0];
+									result = result.toUpperCase();
+									var content_data = res[1];
+									content_data = Base.decode(content_data);
+									var datas = JSON.parse(content_data)
+									var terms = datas.terms;
+									var allLessonCount = 0;
+									var finishedLesson = 0;
+									for(var i = 0; i < terms.length; i++) {
+										var termLessonCount = 0;
+										var termFinishedLessonCount = 0;
+										var keyT = "term_" + (i + 1) + "_";
+										var termsJson = JSON.stringify(terms[i]);
+										var regT = new RegExp(keyT, "g");
+										var termsJsonString = termsJson.replace(regT, "");
+										terms[i] = JSON.parse(termsJsonString);
+										var data = terms[i];
+										//var lessonData = lesson[i];
+										var topics = data.topics; //得到topics
+										var id = i + 1;
+										var title = 'term_' + id;
+										data.id = id;
+										if(topics) {
+											data.disabled = false;
+											data.css = "";
+										} else {
+											data.disabled = true;
+											data.css = "true";
+										}
+										if(topics) {
+											var num = 0;
+
+											for(var j = 0; j < topics.length; j++) {
+												var key = "topic_" + (j + 1) + "_";
+												var topicJson = JSON.stringify(topics[j]);
+												var reg = new RegExp(key, "g");
+												var topicJsonString = topicJson.replace(reg, "");
+												topics[j] = JSON.parse(topicJsonString);
+												var lessons = topics[j].lessons;
+												for(var k = 0; k < lessons.length; k++) {
+													num++;
+													var lessonsCon = lessons[k]; //得到所有的lesson
+													if(vm.checkIfLessonFinished(lessonsCon.lesson)) {
+														lessons[k].completed = true;
+														lessons[k].css = "true";
+														finishedLesson++;
+														termFinishedLessonCount++;
+													} else {
+														lessons[k].completed = false;
+
+														lessons[k].css = "";
+													}
+													lessons[k].term_name = "Lesson" + (num) + " "
+													allLessonCount++;
+													termLessonCount++;
+												}
+											}
+										}
+										terms[i].termFinishedLessonCount = termFinishedLessonCount;
+										terms[i].termLessonCount = parseInt(terms[i].end) - parseInt(terms[i].start) + 1;
+
+										if(termLessonCount == termFinishedLessonCount)
+											terms[i].finished = true;
+										else
+											terms[i].finished = false;
+									}
+									var termStr = JSON.stringify(terms);
+									vm.termLessonCount = terms[0].termLessonCount;
+									vm.termFinishedLessonCount = terms[0].termFinishedLessonCount;
+									localStorage.setItem("terms_list", termStr);
+								},
+								error: function(err) {
+									console.log(err)
+								}
+							})
+						},
+						checkIfLessonFinished: function(lesson_name) {
+							//根据课程名称查询课程是否在已结束课程列表里
+							var finished_lesson = localStorage.finished_lesson_list;
+							finished_lesson = JSON.parse(finished_lesson)
+							if(finished_lesson == null) {
+								return false
+							}
+
+							for(var i = 0; i < finished_lesson.count; i++) {
+								if(finished_lesson[i].content_name == lesson_name) {
+									return true;
+								}
+							}
+							return false;
+						},
+
+					}
+
+				});
+				(function($, doc) {
+					$.init();
+					mui.back = function() {
+						//首次按键，提示‘再按一次退出应用’
+						if(!first) {
+							first = new Date().getTime();
+							mui.toast('再按一次退出应用');
+							setTimeout(function() {
+								first = null;
+							}, 1000);
+						} else {
+							if(new Date().getTime() - first < 1000) {
+								plus.runtime.quit();
+							}
+						}
+						alert(e.keyType + "\n" + e.keyCode);
+						return false;
+					}
+					//得到teacherInfo信息，并复制给data里的teacherInfo
+					var teacherInfo = localStorage.teacherInfo;
+					teacherInfo = JSON.parse(teacherInfo)
+					vm.teacherInfo = teacherInfo;
+					var lessons = document.getElementById('lessons');
+					lessons.addEventListener("tap", function() {
+						mui.openWindow({
+							url: 'lessons.html'
+						})
+					})
+					vm.getFinishedLessonList();
+					vm.getTermContent();
+				}(mui, document));
+			</script>
+	</body>
+
+</html>

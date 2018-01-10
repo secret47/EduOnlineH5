@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<style type="text/css">
+			.mui-title {
+				font-size: 15px;
+			}
+			
+			.mui-content {
+				position: relative;
+				height: 100% !important;
+			}
+			
+			.mui-slider-group {
+				/*height: 100%;*/
+			}
+			
+			.mui-slider-item {
+				height: 100%;
+				overflow-y: scroll;
+			}
+			
+			#app {
+				height: 100%;
+			}
+			
+			.titile {
+				height: 60px;
+				background: #fff;
+				line-height: 60px;
+				text-align: center;
+				color: #1e88e5;
+			}
+			
+			.desHeader {
+				background: #1E88E5;
+				color: #fff;
+				text-indent: 10px;
+				display: inline-block;
+				padding: 5px 10px;
+				border-radius: 0 5px 5px 0;
+				font-size: 15px;
+			}
+			
+			.desCont {
+				min-height: 30px;
+				background: #fff;
+				margin: 15px 0;
+				text-indent: 5px;
+				box-shadow: 3px 0px 3px 3px #dedede;
+				overflow-y: scroll;
+				padding: 5px;
+			}
+			
+			.item-content {
+				margin: 15px 0;
+			}
+			
+			.item-content li {
+				width: 100%;
+			}
+			
+			.num {
+				display: block;
+				width: 5%;
+				height: auto;
+				float: left;
+			}
+			
+			.cont {
+				width: 93%;
+				display: block;
+				float: left;
+				text-indent: 0;
+				padding-left: 1%;
+				font-size: 14px;
+			}
+			
+			#pros {
+				/*position: absolute;*/
+				/*bottom: 0;*/
+				width: 100%;
+				height: 40px;
+				z-index: 10000;
+			}
+			
+			#pros progress {
+				width: 85%;
+				height: 5px;
+				background: #afafaf;
+				color: #1D89E4;
+				float: left;
+				margin-top: 18px;
+				margin-left: 3%;
+				border-radius: 5px;
+			}
+			
+			progress::-webkit-progress-inner-element {
+				border-radius: 4px;
+			}
+			
+			progress::-webkit-progress-value {
+				border-radius: 4px;
+				background: #1D89E4;
+			}
+			
+			progress::-webkit-progress-bar {
+				border-radius: 4px;
+				background: #afafaf;
+			}
+			
+			progress::-moz-progress-bar {
+				border-radius: 4px;
+				background: #afafaf;
+			}
+			
+			::-webkit-scrollbar {
+				display: none;
+			}
+			
+			#pros span {
+				display: inline;
+				float: left;
+				width: 12%;
+				height: 40px;
+				font-size: 12px;
+				line-height: 40px;
+				text-align: center;
+				font-weight: 600;
+				;
+			}
+			
+			video {
+				width: 100%;
+			}
+			
+			.lessonStart,
+			.lessonEnd {
+				width: 150px;
+				border: 0;
+				background: white;
+				color: orange;
+				border: 2px solid #1e88e5;
+				font-size: 15px;
+				font-weight: 600;
+				letter-spacing: 10px;
+				text-align: center;
+				padding-left: 20px;
+			}
+			
+			.studentList {
+				width: 80%;
+				height: 80%;
+				margin: 0 auto;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				background-color: #fff;
+				z-index: 101;
+				border-radius: 5px;
+			}
+			
+			.headTitle {
+				height: 40px;
+				text-align: center;
+				line-height: 40px;
+				color: #1E88E5;
+			}
+			
+			.close {
+				height: 40px;
+			}
+			
+			.close button {
+				width: 70px;
+				margin-top: 3px;
+			}
+			
+			.mui-table-view {
+				height: calc(100% - (40px * 2));
+				overflow: auto;
+			}
+			
+			.snames {
+				width: 80%;
+				height: 40px;
+				display: inline-block;
+				line-height: 40px;
+			}
+			
+			.Attrs {
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				background: #1E88E5;
+				color: #fff;
+				border: 0;
+			}
+			
+			.notAttr {
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				background: #4F4F4F;
+				color: #fff;
+				border: 0;
+			}
+			
+			.desTitle {
+				min-height: 25px;
+				line-height: 25px;
+			}
+			
+			.desData {
+				width: 90%;
+				margin-left: 7%;
+			}
+			
+			.desData .sequence {
+				display: block;
+				width: 2%;
+				float: left;
+			}
+			
+			.desData .con {
+				display: block;
+				width: 97%;
+				float: left;
+				margin-left: 1%;
+			}
+			
+			.desData p {
+				color: #000;
+				margin-bottom: 5px;
+				height: 25px;
+				line-height: 25px;
+			}
+			/*
+			 音乐播放器
+			 * */
+			
+			audio {
+				width: 100%;
+			}
+			
+			.storybook {
+				width: 100%;
+				margin: 0 auto;
+				background: #fff;
+				padding: 10px;
+			}
+			
+			.storybook .desc {
+				height: 150px;
+			}
+			
+			.storybook .pageTurn {
+				height: 50px;
+				display: flex;
+			}
+			
+			.storybook .pageTurn .preBtn,
+			.nextBtn,
+			.allcount {
+				flex: 1;
+			}
+			
+			.preBtn,
+			.nextBtn {
+				border: 0;
+				border: 2px solid #1E88E5;
+				color: #EC971F;
+				font-weight: 600;
+			}
+			
+			.allcount {
+				text-align: center;
+				font-weight: 600;
+				line-height: 50px;
+			}
+			
+			.desc p {
+				color: #000000;
+			}
+			
+			.imgDesCont {
+				width: 100%;
+				background: #fff;
+				display: inline-block;
+				margin: 0px 0 10px 0;
+				text-align: center;
+				padding: 10px;
+				font-size: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" @click="returnBack"></a>
+				<h1 class="mui-title">{{LessonTitle}}</h1>
+			</header>
+			<div class="mui-content mui-scroll-wrappe" :style="{'height':(winHeight-44)+'px !important'}">
+				<div class="mui-slider" id="slider" :style="{'height':(winHeight-84)+'px'}">
+					<div class="mui-slider-group" :style="{'height':(winHeight-84)+'px'}">
+						<div class="mui-slider-item" v-for="(item,index) in lessons" :data-id="index+1" :style="{'height':(winHeight-84)+'px','overflow-y':'scroll'}">
+							{{item.part}}
+							<div v-if="item.part === 'manual'" v-for="desc in item.descriptions" class="item-content">
+								<div v-if="">
+
+								</div>
+								<p>
+									<span class="desHeader">
+										{{desc.header}}
+									</span>
+								</p>
+								<ul class="desCont">
+									<li v-for="(des,index) in desc.description">
+										<div class="desTitle">
+											<span class="num">{{index+1}}.</span>
+											<span class="cont">{{des.title}}</span>
+										</div>
+										<div class='desData'>
+											<p v-for="de in des.data">
+												<span class='sequence'>•</span>
+												<span class='con'>{{de}}</span>
+											</p>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div v-if="item.part === 'video'" v-for="desc in item.descriptions" class="item-content">
+								<p>
+									<span class="desHeader">
+									{{desc.header}}
+									</span>
+								</p>
+								<div>
+									<video :src="item.video_path" controls="controls">
+									</video>
+								</div>
+
+								<ul class="desCont">
+									<li v-for="(des,index) in desc.description">
+										<span class="num">{{index+1}}.</span><span class="cont">{{des.title}}</span>
+									</li>
+								</ul>
+							</div>
+
+							<div v-if="item.part === 'storybook'" class="item-content">
+								<p>
+									<span class="desHeader">
+										storyBook
+									</span>
+								</p>
+								<div v-if="item.selectedImgIndex >=0" class="storybook">
+									<img :src="item.chapter[item.selectedImgIndex].url" />
+									<div class="desc">
+										<p v-for="des in item.chapter[item.selectedImgIndex].description">{{des}}</p>
+
+									</div>
+									<div class="pageTurn">
+										<button @click="prePage(item.chapter[item.selectedImgIndex].partInx)" class="preBtn">上一页</button>
+										<div class="allcount">
+											{{storybookCur}}/{{allCount}}
+										</div>
+										<button @click="nextPage(item.chapter[item.selectedImgIndex].partInx)" class="nextBtn">下一页</button>
+									</div>
+								</div>
+								<div v-if="item.storybook_type == 'page' && item.selectedImgIndex >=0" class="">
+
+								</div>
+							</div>
+
+							<div v-if="item.part === 'image'" class="item-content">
+								<p>
+									<span class="desHeader">
+										Images
+									</span>
+								</p>
+								<div v-for="imgs in item.image_urls">
+									<div v-for="img in imgs.url">
+										<img :src="img" />
+									</div>
+									<div v-for="(description,index) in item.image_descriptions">
+										<div v-for="dec in description">
+											<span v-if="index == imgs.id" class="imgDesCont">{{dec}}</span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<div v-if="item.part === 'music'" class="item-content">
+								<p>
+									<span class="desHeader">
+										{{item.name}}
+									</span>
+								</p>
+								<audio :src="item.music_url" controls="controls">亲你的浏览器不支持audio哦</audio>
+								<div v-for="description in item.descriptions" class="desCont">
+									<div v-for="decs in description">
+										<span v-for="dec in decs">{{dec.title}}</span>
+									</div>
+								</div>
+							</div>
+							<div v-if="index == 0" class="mui-text-center">
+								<!-- 第一页有开始按钮 -->
+								<button v-if="! isStarting" class="btn lessonStart mui-btn-primary" @click="start">开始</button>
+							</div>
+							<div v-if="index == total_parts - 1" class="mui-text-center">
+								<button v-if="isStarting && isCurLesson" class="btn lessonEnd mui-btn-primary" @click="ends">结束</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div id="pros" class="mui-progressbar">
+					<progress min='0' max="100" id="progress" :value="progressbar"></progress>
+					<span>{{cur}}/{{total_parts}}</span>
+				</div>
+			</div>
+
+			<div id="popover" class="mui-backdrop" style="display: none;">
+				<div class="studentList" :style="{'width':winWidth,'height':winHeight}">
+					<div class="headTitle">
+						出勤名单
+					</div>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell" v-for="child in childrenList">
+							<span class="snames">{{child.name}}</span>
+							<button :class="child.css" @click="attr(child.id)">{{child.attr}}</button>
+						</li>
+					</ul>
+					<div class="close mui-text-center">
+						<button class="btn mui-btn-primary" @click="closePop">Confirm</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/app.js"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				total_parts: 0,
+				lessons: [],
+				LessonTitle: "",
+				progressbar: 0,
+				cur: 1,
+				curLesson: "",
+				winWidth: 0,
+				winHeight: 0,
+				allCount: 0,
+				storybookCur: 1,
+				childrenList: [],
+				attrs: {
+					atttrue: false,
+					attfalse: true,
+				},
+				startTime: "",
+				session_id: 0,
+				term_index: "",
+				childList: [],
+				isStarting: false,
+				isCurLesson: false,
+			},
+			updated: function() {
+				var slider = mui('#slider');
+				slider.slider({
+					interval: 0
+				});
+			},
+			created: function() {
+				this.winWidth = screen.width;
+				this.winHeight = screen.height;
+				console.log(screen.height)
+				this.getCurrentLesson();
+			},
+			methods: {
+				returnBack: function() {
+					console.log("课程详情");
+					mui.back();
+					var index = vm.term_index;
+					mui.openWindow({
+						url: 'lessonDetail.html?id=' + index
+					})
+
+				},
+				getCurrentLesson: function() {
+					//得到是不是当前课程
+					var class_id = localStorage.class_id;
+					var account_id = localStorage.accountId;
+					$.ajax({
+						url: api + "/SOFGetClassStatusLatest.php",
+						type: 'GET',
+						data: {
+							class_id: class_id,
+							account_id: account_id
+						},
+						success: function(res) {
+							var data = res.split(/\t/);
+							var curLess;
+							if(data[1] == "") {
+								curLess = 0;
+							} else {
+								var classPorgress = Base.decode(data[1]);
+								var classJson = JSON.parse(classPorgress);
+								var lastLesson = classJson[0];
+								var timeNow = Date.parse(new Date());
+								timeNow = timeNow / 1000;
+								if(lastLesson.endtime > timeNow) {
+									//正在上课
+									vm.isStarting = true;
+									if(vm.curLesson == localStorage.CURRENT_LESSON) {
+
+										vm.isCurLesson = true;
+									}
+								} else {
+									//课程已结束
+									//得到最后上课的班级的上一堂课的名字
+									var lastName = lastLesson.content_name;
+									localStorage.setItem('lastName', lastName)
+								}
+							}
+						},
+						error: function(err) {
+							console.log(err);
+						}
+					})
+				},
+				//一开始就设置sessiondata
+				setSessionData: function() {
+					var lessonName = this.curLesson;
+					var class_id = localStorage.class_id;
+					var date = new Date();
+					var year = date.getFullYear(); //得到年
+					var month = date.getMonth(); //得到月
+					month = month + 1;
+					var day = date.getDate(); //得到日
+					var time = year + '-' + month + '-' + day; //拼成当前时间
+					$.ajax({
+						type: "GET",
+						url: api + '/SOFUploadSessionData.php',
+						data: {
+							session_name: lessonName,
+							class_data_id: class_id,
+							date: time
+						},
+						success: function(res) {
+							var data = res.split(/\t/);
+							var result = data[0];
+							result = result.toUpperCase();
+							if(result == 'OK') {
+								//设置session_id
+								localStorage.setItem('session_data_id', data[1]);
+								vm.setTeacherSession();
+							}
+						},
+						error: function(err) {
+							console.log(err)
+						}
+
+					})
+				},
+				//设置教师状态
+				setTeacherSession: function() {
+					var session_id = localStorage.session_data_id;
+					var teacher_id = localStorage.teacher_id;
+					$.ajax({
+						type: "GET",
+						url: api + "/SOFAddSessionTeacher.php?session_data_id=" + session_id + '&teacher_info_id=' + teacher_id,
+						data: {
+							session_data_id: session_id,
+							teacher_info_id: teacher_id
+						},
+						success: function(res) {
+							console.log(res)
+						},
+						error: function(err) {
+							console.log(err)
+						}
+					})
+				},
+				//开始上课
+				startLessons: function() {
+					//需要当前课程名称，当前开始的时间戳，当前的班级
+					var lessonName = this.curLesson;
+					var class_id = localStorage.class_id;
+					var timestamp = Date.parse(new Date());
+					timestamp = timestamp / 1000;
+					$.ajax({
+						type: 'POST',
+						url: api + '/SOFAddClassStatus.php',
+						data: {
+							content_name: lessonName,
+							class_id: class_id,
+							starttime: timestamp
+						},
+						success: function(res) {
+							var data = res.split(/\t/);
+							var result = data[0];
+							result = result.toUpperCase();
+							if(result == 'OK') {
+								var classStatusId = data[1];
+								localStorage.setItem('classStatusId', classStatusId);
+								localStorage.setItem('CURRENT_LESSON', lessonName)
+								localStorage.setItem('CURRENT_NEXT_LESSON', "");
+								//设置状态
+								vm.setSessionData();
+								vm.startTime = timestamp;
+								if(vm.curLesson == localStorage.CURRENT_LESSON) {
+									vm.isCurLesson = true;
+								}
+							}
+						},
+						error: function(err) {
+							console.log(err)
+						}
+
+					})
+				},
+				//点击开始上课按钮
+				start: function() {
+					var lesson = vm.LessonTitle;
+					var btnArray = ['取消', '确定'];
+					var str = '您确定要开始上《' + lesson + "》这一课吗？";
+					mui.confirm(str, '开始上课', btnArray, function(e) {
+						if(e.index == 1) {
+							vm.isStarting = true;
+							vm.startLessons();
+
+						}
+						if(e.index == 0) {
+
+						}
+					})
+				},
+				//学生出勤
+				attr: function(id) {
+					var child_id = id; //点击的就是学生的id。)
+					var childrenList = vm.childrenList;
+					var child = '"child' + child_id + '":' + '{"id":' + child_id + ',"checked":' + 'true' + ',"attrCon":' + '"出勤"' + '}'
+					vm.childList.push(child)
+					for(var i = 0; i < childrenList.length; i++) {
+						var id = childrenList[i].id;
+						if(child_id == id) {
+							var checked = childrenList[i].checked; //得到当前学生的出勤状态 true 出勤，false，缺勤
+							if(checked == true) {
+								//当点中已出勤的学生的id时，这个学生就该改为缺勤模式
+								childrenList[i].checked = false;
+								childrenList[i].attr = "缺勤";
+								childrenList[i].css = "notAttr";
+							} else {
+								childrenList[i].checked = true;
+								childrenList[i].attr = "出勤";
+								childrenList[i].css = "Attrs";
+							}
+						}
+					}
+
+				},
+				endLessons: function() {
+					//设置结束时，课程的状态
+					//得到ession_id，班级id和时间戳
+					var lessonName = this.curLesson;
+					var session_id = localStorage.session_data_id;
+					vm.session_id = session_id;
+					var class_id = localStorage.class_id;
+					var timestamp = Date.parse(new Date());
+					timestamp = timestamp / 1000;
+					var index = localStorage.classStatusId;
+					vm.setChildren();
+					$.ajax({
+						type: 'POST',
+						url: api + '/SOFUpdateClassStatus.php',
+						data: {
+							index: index,
+							endtime: timestamp
+						},
+						success: function(res) {
+							//提交成功后关闭当前对话框
+							var dataArr = res.split(/\t/);
+							var curData = dataArr[0];
+							curData = curData.toUpperCase();
+							if(curData == 'OK') {
+								localStorage.setItem('lastName', lessonName);
+								vm.updateDisplay(); //更新显示页面
+								var session_id = parseInt(localStorage.session_data_id);
+								var finished_lesson = localStorage.finished_lesson_list;
+								finished_lesson = JSON.parse(finished_lesson);
+								var obj = {
+									"content_name": lessonName,
+									"session_id": session_id,
+									"starttime": vm.startTime,
+									"endtime": timestamp
+								};
+								if(finished_lesson != null) {
+									finished_lesson[finished_lesson.count] = obj;
+									finished_lesson.count = parseInt(finished_lesson.count) + 1;
+								} else {
+									finished_lesson = {
+										0: obj,
+										count: 1
+									};
+								}
+								finished_lesson = JSON.stringify(finished_lesson);
+								localStorage.setItem('finished_lesson_list', finished_lesson);
+								localStorage.removeItem('session_data_id');
+								sessionStorage.setItem('isStarting', false);
+							}
+						},
+						error: function(err) {
+							console.log(err)
+						}
+					})
+
+				},
+				updateDisplay: function() {
+					var terms = localStorage.terms_list;
+					terms = JSON.parse(terms)
+					var lessonNameC = this.curLesson;
+					var found = false;
+					var finishedLessonCount = 0;
+					var nextLessonName = "";
+					for(var k = 0; k < terms.length; k++) {
+						var termFinishedLessonCount = 0;
+						if(terms[k].topics == null)
+							continue;
+						for(var i = 0; i < terms[k].topics.length; i++) {
+							var topics = terms[k].topics;
+							var lessonItem = topics[i].lessons;
+							for(var j = 0; j < lessonItem.length; j++) {
+								if(!found)
+									finishedLessonCount++;
+								var lessonName = lessonItem[j].lesson; //得到课程的lessonName；
+								if(lessonNameC == lessonName && !found) {
+									lessonItem[j].completed = true;
+									lessonItem[j].css = "true";
+									found = true;
+									termFinishedLessonCount++;
+									terms[k].termFinishedLessonCount = termFinishedLessonCount;
+								} else {
+									if(!found) {
+										lessonItem[j].completed = true;
+										termFinishedLessonCount++;
+									} else {
+										if(nextLessonName == "")
+											nextLessonName = lessonName;
+									}
+								}
+							}
+						}
+					}
+
+					localStorage.setItem('CURRENT_LESSON', "");
+					localStorage.setItem('CURRENT_NEXT_LESSON', nextLessonName);
+					var selectedTermIndex = localStorage.SELECTED_TERM_INDEX;
+					terms = JSON.stringify(terms)
+					localStorage.setItem('terms_list', terms);
+				},
+				//点击结束上课按钮
+				ends: function() {
+					var lesson = vm.LessonTitle;
+					var btnArray = ['取消', '确定'];
+					var str = '您确定要结束《' + lesson + "》这一课吗？";
+					mui.confirm(str, '结束上课', btnArray, function(e) {
+						if(e.index == 1) {
+							$('#popover').show() //show hide toggle
+							vm.endLessons();
+						}
+						if(e.index == 0) {
+
+						}
+					})
+				},
+				setChildren: function() {
+					var childrenList = localStorage.childsData;
+					childrenList = JSON.parse(childrenList);
+					for(var i = 0; i < childrenList.length; i++) {
+						var data = childrenList[i]
+						data.attr = '缺勤';
+						data.checked = false;
+						data.css = "notAttr"
+					}
+					this.childrenList = childrenList;
+				},
+				closePop: function() {
+					$("#popover").hide();
+					var childList = vm.childList;
+
+					console.log(childList)
+					childList = childList.toString();
+					var childStr = "{" + childList + "}";
+					var base64Children = Base.encode(childStr);
+					var session_id = vm.session_id;
+					$.ajax({
+						type: "POST",
+						url: api + '/SOFSubmitAttendanceNew.php',
+						data: {
+							session_id: session_id,
+							childlist: base64Children
+						},
+						success: function(res) {
+							console.log(res)
+							var data = res.split(/\t/);
+							var result = data[0];
+							result = result.toUpperCase();
+							if(result == 'OK') {
+								console.log('提交成功')
+								mui.openWindow({
+									url: 'lessonDetail.html?id=' + vm.term_index
+								})
+							}
+						},
+						error: function(err) {
+							console.log(err)
+						}
+					})
+				},
+				prePage: function(index) {
+					var dataPart = vm.lessons[index];
+					if(dataPart.selectedImgIndex >= 1) {
+						dataPart.selectedImgIndex--;
+					}
+					if(dataPart.selectedImgIndex < -1) {
+						return;
+					}
+					var num = dataPart.selectedImgIndex + 1;
+					vm.storybookCur = num;
+					vm.lessons[index] = dataPart;
+				},
+				nextPage: function(index) {
+					var dataPart = vm.lessons[index];
+					if(dataPart.selectedImgIndex < dataPart.chapter.length - 1) {
+						dataPart.selectedImgIndex++;
+					}
+					if(dataPart.selectedImgIndex > 1) {
+						// break;
+					}
+					var num = dataPart.selectedImgIndex + 1;
+					vm.storybookCur = num;
+					vm.lessons[index] = dataPart;
+				}
+			}
+		});
+		(function($, doc) {
+			$.init();
+			mui.plusReady(function() {
+				getContent();
+				mui.oldback = mui.back;
+				var clickNum = 0;
+			})
+			// 获取url中的参数
+			function getUrlParam(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r != null) {
+					return unescape(r[2]);
+				} else {
+					return null;
+				}
+			}
+			//当前选中的课程名，通过课程名得到当前课程的内容
+			var lesson = getUrlParam('lesson');
+			var name = getUrlParam('name');
+			var description = getUrlParam('des');
+			var index = getUrlParam('index');
+			vm.term_index = index;
+			description = decodeURI(description);
+			name = decodeURI(name);
+			//设置当前课程名称
+			vm.curLesson = lesson;
+			console.log(vm.curLesson)
+
+			var setTitle = function() {
+				console.log(name)
+				if(name != 'undefined') {
+					vm.LessonTitle = name;
+				} else if(name == 'undefined') {
+					vm.LessonTitle = description;
+				} else if(name == 'undefined' && description != 'undefined') {
+					vm.LessonTitle = lesson
+				}
+			}
+
+			var getContent = function() {
+				//利用RunJS的Echo Ajax功能测试
+				var url = api + '/SOFGetLessonByName.php?name=' + lesson;
+				//请求方式，默认为Get；
+				var type = 'get';
+				//预期服务器范围的数据类型
+				var dataType = "html";
+				//发送数据
+				var data = {
+					name: lesson
+				};
+				//url = url + (dataType === 'html' ? 'text' : dataType);
+				//respnoseEl.innerHTML = '正在请求中...';
+				if(type === 'get') {
+					if(dataType === 'json') {
+						$.getJSON(url, data, contentSuccess);
+					} else {
+						$.get(url, data, contentSuccess, dataType);
+					}
+				} else if(type === 'post') {
+					$.post(
+						url,
+						data,
+						contentSuccess,
+						dataType
+					);
+				}
+			}
+			var contentSuccess = function(res) {
+				var dataType = "html";
+				if(dataType === 'json') {
+					response = JSON.stringify(response);
+				} else if(dataType === 'xml') {
+					response = new XMLSerializer().serializeToString(response).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+				}
+				var res = res.split(/\t/);
+				var result = res[0];
+				result = result.toUpperCase();
+				var content_data = res[1];
+				content_data = Base.decode(content_data);
+				var dataJson = JSON.parse(content_data);
+				var total_parts = parseInt(dataJson.total_parts);
+				//得到总的part数
+				var parts = dataJson.parts;
+				var partIdx = 0;
+				var arr = [];
+				for(var i = 0; i < parts.length; i++) {
+					var data = parts[i];
+					var part = 'part_' + (i + 1);
+					var part_name = data[part];
+					if(part_name == 'manual' || part_name == 'image' || part_name == 'video' || part_name == 'storybook' || part_name == 'music') {
+						data.part = part_name;
+						if(part_name == 'video') {
+							// 如果分类是视频
+							var partProperty = JSON.stringify(parts[i]);
+							var reg = new RegExp(part + "_", "g");
+							partProperty = partProperty.replace(reg, "");
+							var jsonVideoData = JSON.parse(partProperty);
+							arr.push(jsonVideoData);
+							partIdx++;
+						}
+						if(part_name == 'image') {
+							// 如果分类是图片
+							var partProperty = JSON.stringify(parts[i]);
+							var reg = new RegExp(part + "_", "g");
+							partProperty = partProperty.replace(reg, "");
+							var jsonImageData = JSON.parse(partProperty);
+							var img_urls = jsonImageData.image_urls;
+							for(var k = 0; k < img_urls.length; k++) {
+								var data = img_urls[k];
+								var obj = {
+									"url": data,
+									"autoWidth": 0,
+									"autoHeight": 0,
+									"id": k,
+									"part_index": partIdx
+								} //构造Json
+								img_urls[k] = obj;
+							}
+
+							arr.push(jsonImageData)
+							partIdx++;
+						}
+						if(part_name == 'music') {
+							//如果分类是音乐
+							var partProperty = JSON.stringify(parts[i]);
+							var reg = new RegExp(part + "_", "g");
+							partProperty = partProperty.replace(reg, "");
+							var jsonMusicData = JSON.parse(partProperty);
+							arr.push(jsonMusicData)
+							partIdx++;
+						}
+						if(part_name == 'storybook') {
+							var partProperty = JSON.stringify(parts[i]);
+							var reg = new RegExp(part + "_", "g");
+							partProperty = partProperty.replace(reg, "");
+							var jsonStoryData = JSON.parse(partProperty);
+							var story_type = jsonStoryData.storybook_type; //得到storybook的type
+							var start = jsonStoryData.storybook_start; //得到开始
+							var end = jsonStoryData.storybook_end; //得到结束
+							jsonStoryData.selectedImgIndex = -1; //当前选中的图
+							var story = localStorage.storybook; //读到所有的storybook
+							storyJson = JSON.parse(story);
+							console.log(storyJson);
+							if(story_type == "chapter") {
+								// 如果故事书等于chapter
+								var picIndex = 0;
+								jsonStoryData.chapter = [];
+								for(var s = 0; s < storyJson.length; s++) {
+									var data = storyJson[s];
+									var index = data.index; //得到每个chapter的index
+									if(index >= start && index <= end) {
+										var chap_datas = data.data;
+										for(var k = 0; k < chap_datas.length; k++) {
+											chap_datas[k].partInx = partIdx;
+											chap_datas[k].picIndex = picIndex;
+											var des = chap_datas[k].description;
+											des = des.replace(/\“/g, "");
+											des = des.replace(/\”/g, "")
+											des = des.replace(/\|/, "")
+											var desArr = des.split("|");
+											chap_datas[k].description = desArr;
+											picIndex++;
+											chap_datas[k].newWidth = vm.winWidth - 40;
+											chap_datas[k].newHeight = parseInt(chap_datas[k].newWidth * chap_datas[k].height / chap_datas[k].width);
+
+											jsonStoryData.chapter.push(chap_datas[k]);
+											jsonStoryData.selectedImgIndex = 0;
+											var storybookAll = k + 1;
+											vm.allCount = storybookAll;
+											//                                          that.setData({
+											//                                              storybookAll: storybookAll
+											//                                          })
+										}
+									}
+								}
+							}
+							if(story_type == "page") {
+								// 如果故事书等于page
+								var picIndex = 0;
+								jsonStoryData.chapter = [];
+								var storybookStart = parseInt(jsonStoryData.storybook_start);
+								var storybookEnd = parseInt(jsonStoryData.storybook_end);
+								var storybookAll = storybookEnd - storybookStart + 1;
+								vm.allCount = storybookAll;
+								//                              that.setData({
+								//                                  storybookAll: storybookAll
+								//                              })
+								for(var s = 0; s < storyJson.length; s++) {
+									var chapter = storyJson[s];
+									// var index = chapter.index;//得到每个chapter的index
+									var chap_datas = chapter.data;
+									for(var k = 0; k < chap_datas.length; k++) {
+										if(chap_datas[k].id >= start && chap_datas[k].id <= end) {
+											chap_datas[k].partInx = partIdx;
+											var des = chap_datas[k].description;
+											chap_datas[k].picIndex = picIndex;
+											des = des.replace(/\“/g, "");
+											des = des.replace(/\”/g, "")
+											des = des.replace(/\|/, "")
+											var desArr = des.split("|");
+											chap_datas[k].description = desArr;
+											picIndex++;
+											chap_datas[k].newWidth = vm.winWidth - 40;
+											chap_datas[k].newHeight = parseInt(chap_datas[k].newWidth * chap_datas[k].height / chap_datas[k].width);
+											jsonStoryData.chapter.push(chap_datas[k]);
+											jsonStoryData.selectedImgIndex = 0;
+
+										}
+									}
+								}
+							}
+							arr.push(jsonStoryData)
+							partIdx++;
+						}
+						if(part_name == 'manual') {
+							arr.push(data);
+							partIdx++;
+						}
+					}
+				}
+				vm.total_parts = arr.length;
+				vm.progressbar = 100 / total_parts;
+				vm.lessons = arr;
+				console.log(vm.lessons)
+			}
+
+			//切换显示进度条
+			document.getElementById('slider').addEventListener('slide', function(event) {
+				var num = event.detail.slideNumber + 1; //得到当前页面
+				vm.cur = num;
+				var total = vm.total_parts;
+				var everyPer = 100 / total;
+				cur = everyPer * num;
+				vm.progressbar = cur;
+
+			});
+
+			//得到内容
+			getContent();
+			setTitle();
+
+		}(mui, document))
+	</script>
+
+</html>

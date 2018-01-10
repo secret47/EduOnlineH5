@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<style type="text/css">
+			ul,
+			li {
+				list-style: none;
+				padding: 0;
+			}
+			
+			ul {}
+			
+			.thislessons {
+				width: 95%;
+				margin: 20px auto;
+				position: relative;
+				border-radius: 5px;
+				border: 0;
+				padding: 0;
+				background: transparent;
+			}
+			
+			.thislessons .leBack {
+				width: 100%;
+			}
+			
+			.title {
+				width: 100%;
+				height: 50px;
+				position: absolute;
+				bottom: 5px;
+				background-image: url('https://api.jules.xin/images/1ihv9.png');
+				background-size: 100% 100%;
+				border-radius: 0px 0px 5px px;
+				color: #fff;
+				text-align: left;
+			}
+			
+			.title span {
+				display: block;
+				height: 25px;
+				line-height: 25px;
+				font-size: 13px;
+				text-indent: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" @click="returnBack"></a>
+				<h1 class="mui-title">School of Fish</h1>
+			</header>
+			<div class="mui-content mui-text-center">
+				<button v-for="(item,index) in lessons" :data-id="item.id" @click="openDetail(index)" class="thislessons" :disabled="item.disabled">
+					<div class="title">
+						<span class="lessonName">
+								{{item.names}}
+						</span>
+						<span class="lessonDes">
+								{{item.termFinishedLessonCount}}/{{item.termLessonCount}} Lesson Completed
+						</span>
+					</div>
+					<img :src="item.imgUrl" class="leBack" />
+				</button>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/app.js"></script>
+	<script src="../js/base64.js"></script>
+	<script>
+		var vm = new Vue({
+			el: "#app",
+			data: {
+				imgUrl: [{
+						url: 'https://api.jules.xin/images/term1Pic.png'
+					},
+					{
+						url: 'https://api.jules.xin/images/aqFOA.png'
+					},
+					{
+						url: 'https://api.jules.xin/images/aqPQH.png'
+					},
+					{
+						url: 'https://api.jules.xin/images/aqiyd.png'
+					}
+				],
+				lessons: []
+			},
+			methods: {
+				openDetail: function(index) {
+					var index = index; //得到点的那个学期
+					window.location.href = 'lessonDetail.html?id=' + index
+				},
+				returnBack:function(){
+					mui.openWindow({
+						url:"main.html"
+					})
+				}
+			},
+		});
+
+		(function($, doc) {
+			$.init();
+			var terms_list = localStorage.terms_list;
+			terms_list = JSON.parse(terms_list);
+			var urls = vm.imgUrl;
+			if(terms_list != null) {
+				for(var i = 0; i < terms_list.length; i++) {
+					var data = terms_list[i]
+					var term = i + 1;
+					var termName = 'Term' + term + ' '; //学期名  
+					terms_list[i].names = termName;
+					data.id = term;
+					data.index = i;
+					data.imgUrl = urls[i].url;
+				}
+			}
+			vm.lessons = terms_list;
+			var lists = JSON.stringify(terms_list);
+			localStorage.setItem('terms_list', lists);
+			localStorage.setItem('terms_lists', lists);
+			//得到学期
+		}(mui, document))
+	</script>
+
+</html>

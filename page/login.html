@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.poppicker.css" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/md5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.enterfocus.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/app.js"></script>
+		<style type="text/css">
+			.mui-content {
+				height: 100%;
+				background-image: url('https://api.jules.xin/images/3jg9s.png');
+				background-size: cover;
+			}
+			
+			.language {
+				color: #fff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="logo">
+				<img src="../images/logo.png" />
+			</div>
+			<div id="app">
+				<form id='login-form' class="mui-input-group">
+					<div class="mui-input-row">
+						<input v-model="userModal.username" type="text" class="mui-input-clear mui-input" placeholder="Username">
+					</div>
+					<div class="mui-input-row">
+						<input v-model="userModal.psw" type="password" class="mui-input-clear mui-input" placeholder="Password">
+					</div>
+					<!--<div class="mui-input-row">
+						<span class="language" id="chageLang">中文</span>
+					</div>-->
+				</form>
+
+				<div class="mui-content-padded">
+					<button id='login' class="" @click="login">Login</button>
+				</div>
+			</div>
+		</div>
+
+		</div>
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+				data: {
+					userModal: {
+						username: "",
+						psw: "",
+						language: []
+					},
+				},
+				created: function() {
+					//入口处设置当前初始化语言，为中文
+					//					var lang;
+					//					if(lang == undefined) {
+					//						localStorage.setItem('language', 'chs');
+					//						var chs = localStorage.chs;
+					//						chs = JSON.parse(chs);
+					//						this.language = chs;
+					//					} else if(lang == 'eng') {
+					//						localStorage.setItem('language', 'eng')
+					//						var eng = localStorage.eng;
+					//						eng = JSON.parse(eng);
+					//						this.language = eng;
+					//					}
+				},
+				methods: {
+					login: function() {
+						var username = vm.userModal.username;
+						var psw = md5(vm.userModal.psw);
+						if(psw == 'd41d8cd98f00b204e9800998ecf8427e') {
+							mui.toast('密码不能为空');
+						}
+						$.ajax({
+							url: api + "/SOFUsernameAccessTokenLogin.php",
+							type: "POST",
+							data: {
+								username: username,
+								password: psw
+							},
+							success: function(res) {
+								console.log(res)
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								if(result == 'OK') {
+									var accountId = res[1];
+									var token = res[2];
+									console.log(accountId, token)
+									if(localStorage.accountId != accountId) {
+										localStorage.setItem('lastName', '0');
+										localStorage.setItem('username', '');
+										localStorage.setItem('teacher_id', '');
+										localStorage.setItem('class_id', '');
+										localStorage.setItem('content_name', '');
+										localStorage.setItem('child_count', 0);
+										localStorage.setItem('finished_lesson_list', null);
+										localStorage.setItem('classStatusId', '');
+										localStorage.setItem('session_id', 0);
+										localStorage.setItem('teacherInfo', null);
+										localStorage.setItem('terms_list', null);
+										localStorage.setItem('SELECTED_TERM_INDEX', 0);
+									}
+									vm.loadStorybook();
+									vm.getTeacherId(accountId);
+									sessionStorage.setItem('isStarting', false);
+									localStorage.setItem('accountId', accountId);
+									localStorage.setItem('token', token);
+									localStorage.setItem('username', username);
+									localStorage.setItem('password', psw);
+									mui.openWindow({
+										url: "main.html"
+									})
+
+								} else if(result == 'ERROR') {
+									var data = res[1];
+									//登录失败
+									if(data == 'wrongpass') {
+										mui.toast('密码错误');
+									} else if(data == 'missing') {
+										mui.toast("用户不存在");
+									}
+								}
+							},
+							error: function(err) {
+								console.log(err)
+							}
+						})
+					},
+					getTeacherId: function(accountId) {
+						$.ajax({
+							type: "GET",
+							url: api + '/SOFGetTeacherInfo.php?account_id=' + accountId,
+							data: {
+								account_id: accountId
+							},
+							success: function(res) {
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								var teacher_id = res[1];
+								if(result == 'OK') {
+									localStorage.setItem('teacher_id', teacher_id);
+									vm.getTeacherInfo(teacher_id)
+								}
+							},
+							error: function(err) {
+								console.log(err)
+							}
+						})
+					},
+					getClassId: function(accountId) {
+						$.ajax({
+							type: "GET",
+							url: api + '/SOFGetTeacherClass.php?account_id=' + accountId,
+							data: {
+								account_id: accountId
+							},
+							success: function(res) {
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								var class_id = res[1];
+								if(result == 'OK') {
+									localStorage.setItem('class_id', class_id);
+									vm.getCurClasStudent(class_id);
+									vm.getFinishedLessonList();
+								}
+							},
+							error: function(err) {
+								console.log(err)
+							}
+						})
+					},
+					getTeacherInfo: function(teacher_id) {
+						var accountId = localStorage.accountId;
+						$.ajax({
+							type: "GET",
+							url: api + '/SOFGetTeacherInfoById.php?index=' + teacher_id,
+							data: {
+								index: teacher_id
+							},
+							success: function(res) {
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								if(result == 'OK') {
+									var data = res[1];
+									data = Base.decode(data);
+									var dataJson = JSON.parse(data);
+									var teacherInfo = dataJson[0];
+									var content_name = dataJson[0].content_name;
+									localStorage.setItem('teacherInfo', JSON.stringify(teacherInfo))
+									localStorage.setItem('content_name', content_name);
+									vm.getClassId(accountId);
+								}
+							},
+							error: function(err) {
+								console.log(err)
+							}
+						})
+					},
+					getTermContent: function() {
+						var content_name = localStorage.content_name;
+						$.ajax({
+							type: "GET",
+							url: api + '/SOFGetTermDataByName.php?name=' + content_name,
+							data: {
+								content_name: content_name
+							},
+							success: function(res) {
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								var content_data = res[1];
+								content_data = Base.decode(content_data);
+								var datas = JSON.parse(content_data)
+								var terms = datas.terms;
+								var allLessonCount = 0;
+								var finishedLesson = 0;
+								for(var i = 0; i < terms.length; i++) {
+									var termLessonCount = 0;
+									var termFinishedLessonCount = 0;
+									var keyT = "term_" + (i + 1) + "_";
+									var termsJson = JSON.stringify(terms[i]);
+									var regT = new RegExp(keyT, "g");
+									var termsJsonString = termsJson.replace(regT, "");
+									terms[i] = JSON.parse(termsJsonString);
+									var data = terms[i];
+									//var lessonData = lesson[i];
+									var topics = data.topics; //得到topics
+									var id = i + 1;
+									var title = 'term_' + id;
+									data.id = id;
+									if(topics) {
+										data.disabled = false;
+										data.css = "";
+									} else {
+										data.disabled = true;
+										data.css = "true";
+									}
+									if(topics) {
+										var num = 0;
+										var thisAllLessons = [];
+										for(var j = 0; j < topics.length; j++) {
+											var key = "topic_" + (j + 1) + "_";
+											var topicJson = JSON.stringify(topics[j]);
+											var reg = new RegExp(key, "g");
+											var topicJsonString = topicJson.replace(reg, "");
+											topics[j] = JSON.parse(topicJsonString);
+											var lessons = topics[j].lessons;
+											for(var k = 0; k < lessons.length; k++) {
+												num++;
+												var lessonsCon = lessons[k]; //得到所有的lesson
+												if(vm.checkIfLessonFinished(lessonsCon.lesson)) {
+													lessons[k].completed = true;
+													lessons[k].css = "true";
+													finishedLesson++;
+													termFinishedLessonCount++;
+												} else {
+													lessons[k].completed = false;
+
+													lessons[k].css = "";
+												}
+												lessons[k].term_name = "Lesson" + (num) + " "
+												allLessonCount++;
+												termLessonCount++;
+												thisAllLessons.push(lessons[k].lesson)
+											}
+
+										}
+									}
+									terms[i].termFinishedLessonCount = termFinishedLessonCount;
+									terms[i].termLessonCount = parseInt(terms[i].end) - parseInt(terms[i].start) + 1;
+
+									if(termLessonCount == termFinishedLessonCount)
+										terms[i].finished = true;
+									else
+										terms[i].finished = false;
+								}
+								var termStr = JSON.stringify(terms);
+								localStorage.setItem("terms_list", termStr);
+							},
+							error: function(err) {
+								console.log(err)
+							}
+						})
+					},
+					checkIfLessonFinished: function(lesson_name) {
+						//根据课程名称查询课程是否在已结束课程列表里
+						var finished_lesson = localStorage.finished_lesson_list;
+						finished_lesson = JSON.parse(finished_lesson)
+						if(finished_lesson == null) {
+							return false
+						}
+
+						for(var i = 0; i < finished_lesson.count; i++) {
+							if(finished_lesson[i].content_name == lesson_name) {
+								return true;
+							}
+						}
+						return false;
+					},
+					loadStorybook: function() {
+						$.ajax({
+							type: "GET",
+							url: api + '/SOFGetStorybookFileData.php',
+							data: {
+
+							},
+							success: function(res) {
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								var content_data = res[1];
+								content_data = Base.decode(content_data);
+								// 设置故事书
+								localStorage.setItem('storybook', content_data);
+							},
+							error: function(err) {
+								console.log(err)
+							}
+
+						})
+					},
+					getCurClasStudent: function(class_id) {
+						$.ajax({
+							type: "GET",
+							url: api + '/SOFGetClassStudents.php?class_id=' + class_id,
+							data: {
+								class_id: class_id
+							},
+							success: function(res) {
+								var res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								if(result == 'OK') {
+									var data = Base.decode(res[1]);
+									var childStr = vm.removeBlock(data);
+									var childArrs = childStr.split(",");
+									var arrs = childArrs.slice(0, (childArrs.length - 1)); //得到学生的数组
+									arrs = vm.sliceArray(arrs, 2);
+									var child = []; //所有的学生
+									var str;
+									for(var i = 0; i < arrs.length; i++) {
+										var data = arrs[i];
+										var childName = data[0];
+										var childId = data[1];
+										childName = childName.split(":");
+										var username = childName[1];
+										childId = childId.split(':');
+										var id = childId[1];
+										str = '{' + '"name":' + username + ',' + '"id":' + id + '}';
+										var strJson = JSON.parse(str);
+										child.push(strJson)
+									}
+									var childString = JSON.stringify(child);
+									console.log(childString)
+									//设置学生数据
+									localStorage.setItem('childsData', childString);
+								}
+							},
+							error: function(err) {
+								console.log(err)
+							}
+						})
+					},
+					//去掉花括号
+					removeBlock: function(str) {
+						if(str) {
+							var reg = /^\{/gi;
+							var reg2 = /\}$/gi;
+							str = str.replace(reg, '');
+							str = str.replace(reg2, '');
+							return str;
+						} else {
+							return str;
+						}
+					},
+					//分割数组
+					sliceArray: function(array, subGroupLength) {
+						var index = 0;
+						var newArray = [];
+
+						while(index < array.length) {
+							newArray.push(array.slice(index, index += subGroupLength));
+						}
+
+						return newArray;
+					},
+					getFinishedLessonList: function() {
+						var class_id = localStorage.class_id;
+						var content_name = localStorage.content_name;
+						if(content_name == null || content_name == "" || class_id == null || class_id <= 0) {
+							return;
+						}
+						$.ajax({
+							type: "get",
+							url: api + '/SOFGetClassStatusFinished.php?name=' + content_name + '&class_id=' + class_id,
+							data: {
+								name: content_name,
+								class_id: class_id
+							},
+							success: function(res) {
+								res = res.split(/\t/);
+								var result = res[0];
+								result = result.toUpperCase();
+								if(result == 'OK') {
+									var data = res[1];
+									var curLess;
+									vm.getTermContent();
+									if(data == "") {
+										localStorage.setItem('finished_lesson_list', null);
+										localStorage.setItem('lastName', 0);
+										localStorage.setItem('terms_list', null);
+										localStorage.setItem('SELECTED_TERM_INDEX', 0);
+										curLess = 0;
+									} else {
+										//得到已上完的课程
+										var finshedData = Base.decode(data);
+										localStorage.setItem('finished_lesson_list', finshedData)
+									}
+
+								}
+							},
+							error: function(err) {
+
+							}
+						});
+					}
+				}
+			});
+			(function($) {
+				$.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				mui.plusReady(function() {
+					var username = localStorage.username;
+					var psw = localStorage.psw;
+					var token = localStorage.token;
+					if(token) {
+						mui.openWindow({
+							url: 'main.html'
+						})
+					};
+					mui.oldback = mui.back;
+					var clickNum = 0;
+					mui.back = function(event) {
+						clickNum++;
+						if(clickNum > 1) {
+							plus.runtime.quit();
+						} else {
+							mui.toast("再按一次退出应用");
+						}
+						setTimeout(function() {
+							clickNum = 0
+						}, 1000);
+						return false;
+					}
+					
+					var wgtVer = null;
+					if(window.plus) {
+						plusReady();
+					} else {
+						document.addEventListener('plusready', plusReady(), false);
+					}
+				});
+				// 获取本地应用资源版本号
+				function plusReady() {
+					// ......
+					plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+						wgtVer = inf.version;
+						console.log("当前应用版本：" + wgtVer);
+					});
+
+				}
+
+				var checkUrl = ""; //返回最新的版本的号
+
+				function checkUpdate() {
+					plus.nativeUI, showWaiting("检查更新...");
+					var xhr = new XMLHttpRequest();
+					xhr.onreadystatechange = function() {
+						switch(xhr.readyState) {
+							case 4:
+								plus.nativeUI.closeWaiting(); //关闭等待对话框
+								if(xhr.status == 200) {
+									console.log("检测更新成功:" + xhr.responseText);
+									var newVer = xhr.responseText;
+									if(wgtVer && newVer && (wgtVer != newVer)) {
+										downWgt(); // 下载升级包
+									} else {
+										plus.nativeUI.alert("无新版本可更新！");
+									}
+								} else {
+									console.log("检测更新失败！");
+									plus.nativeUI.alert('检测更新失败！');
+								}
+								break;
+							default:
+								break;
+						}
+					}
+				}
+
+				var wgtURL = ""; // 线上的更新资源	
+				function downWgt() {
+					//下载更新包
+					plus.nativeUI.showWaiting('下载更新文件中...');
+					plus.downloader.createDownload(wgtURL, {
+						filename: "_doc/update/"
+					}, function(d, status) {
+						if(status == 200) {
+							console.log("下载成功:" + d.filename);
+
+						} else {
+							console.loh("下载失败")
+						}
+						plus.nativeUI.closeWaiting();
+					}).start();
+				}
+
+				function installWgt(path) {
+					//更新应用资源
+					plus.nativeUI.showWaiting("安装文件中...");
+					plus.runtime.install(path, {}, function() {
+						plus.nativeUI.closeWaiting();
+						console.log("安装成功");
+						plus.nativeUI.alert("应用资源更新完成！", function() {
+							plus.runtime.restart();
+						})
+					})
+				}
+
+				//				var langPicker = new $.PopPicker();
+				//				langPicker.setData([{
+				//					value: 'chs',
+				//					text: '中文'
+				//				}, {
+				//					value: 'eng',
+				//					text: 'English'
+				//				}]);
+				//				var changeLang = document.getElementById('chageLang');
+				//				changeLang.addEventListener('tap', function(event) {
+				//					langPicker.show(function(items) {
+				//						var item = items[0];
+				//						var languages = item.value;
+				//						var lang = item.text;
+				//						if(languages == 'chs') {
+				//							var chs = localStorage.chs;
+				//							chs = JSON.parse(chs);
+				//							vm.language = chs;
+				//							console.log(vm.language)	
+				//							localStorage.setItem('language', 'chs');
+				//						} else if(languages == 'eng') {
+				//							var eng = localStorage.eng;
+				//							eng = JSON.parse(eng);
+				//							vm.language = eng;
+				//							console.log(vm.language)
+				//							localStorage.setItem('language', 'eng');
+				//						}
+				//						changeLang.innerText = JSON.stringify(lang);
+				//						//返回 false 可以阻止选择框的关闭
+				//						//return false;
+				//					});
+				//				}, false);
+
+			})(mui);
+		</script>
+	</body>
+
+</html>
